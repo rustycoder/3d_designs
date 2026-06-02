@@ -122,6 +122,7 @@ h1, h2, h3, h4 {
   border-radius: 20px;
   padding: 24px;
   width: 340px;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -543,7 +544,7 @@ input:checked + .switch-slider:before {
   transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
               opacity 0.3s ease, 
               border-color 0.3s ease;
-  transform: translate(12px, 12px) rotate(2.5deg);
+  transform: translate(24px, 0px) rotate(0deg);
   display: flex;
   flex-direction: column;
   color: #f8fafc;
@@ -552,7 +553,7 @@ input:checked + .switch-slider:before {
 
 /* Hover effect on stacked card when closed */
 .projects-stacked-card:not(.expanded):hover {
-  transform: translate(22px, 16px) rotate(4deg);
+  transform: translate(36px, 0px) rotate(0deg);
   border-color: rgba(255, 255, 255, 0.15);
 }
 
@@ -760,14 +761,15 @@ input:checked + .switch-slider:before {
   line-height: 1.4;
 }
 
-/* Close button for stacked card drawer */
-.close-drawer-btn {
+/* Close tab on the right edge, physically above the CONTROLS tab */
+.close-drawer-tab {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 50%;
+  left: calc(100% - 1px);
+  top: 8px;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border: 1px solid var(--panel-border);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
   width: 28px;
   height: 28px;
   display: flex;
@@ -775,18 +777,27 @@ input:checked + .switch-slider:before {
   align-items: center;
   color: #94a3b8;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 50;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  z-index: 10;
+  transition: all 0.3s ease;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
 }
 
-.close-drawer-btn:hover {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.4);
-  color: #ef4444;
-  transform: scale(1.1) rotate(90deg);
-  box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+.close-drawer-tab.visible {
+  opacity: 1;
+  pointer-events: auto;
 }
+
+.close-drawer-tab:hover {
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding-left: 12px;
+  width: 32px;
+}
+
 
 

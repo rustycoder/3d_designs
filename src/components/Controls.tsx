@@ -36,19 +36,19 @@ export default function Controls({
   // Dynamic description card content based on selected lighting design/product
   const conceptContent = {
     pavilion: {
-      title: "Pavilion Details",
+      name: "Pavilion",
       desc: "A minimalist luxury outdoor pavilion designed with structural wood framing, a floating concrete foundation slab, and full-height folding glass facades. The pavilion sits cantilevered over a dark reflecting pond, creating continuous visual symmetry.",
       tags: ["Wood & Concrete", "Reflecting Water", "Indoor-Outdoor"]
     },
     batten: {
-      title: "LED Batten Details",
+      name: "Surface mounted LED batten",
       desc: "An empty minimalist gallery space designed to showcase the linear light distribution of a surface-mounted architectural LED batten. The fixture provides a uniform light wash on the ceiling and floor, highlighting structural lines.",
       tags: ["Linear Fixture", "Minimalist Space", "Wall Wash"]
     },
     downlight: {
-      title: "Downlight Details",
-      desc: "A dark concrete exhibition space highlighting recessed downlight projection. A grid of spotlights creates sharp cones of high-contrast light pools on the floor with soft edge fall-offs, demonstrating anti-glare shielding.",
-      tags: ["Grid Pattern", "Spot Projection", "High Contrast"]
+      name: "Recessed downlight",
+      desc: "A precision-engineered recessed downlight: 75mm aperture, 88mm body height. Features a deep anti-glare baffle, anodised aluminium heat-sink with 32 radial cooling fins, a die-cast driver housing, and 4 spring-clip mounting brackets for tool-less ceiling installation.",
+      tags: ["75mm Aperture", "Anti-Glare Baffle", "Radial Heat Sink"]
     }
   }
 
@@ -83,30 +83,21 @@ export default function Controls({
                 <div className="projects-list" style={{ marginTop: 0 }}>
                   <div 
                     className={`project-item-card compact ${activeDesign === 'pavilion' ? 'active' : ''}`} 
-                    onClick={() => {
-                      setActiveDesign('pavilion')
-                      setIsProjectsOpen(true)
-                    }}
+                    onClick={() => setActiveDesign('pavilion')}
                   >
                     <h3>Pavilion</h3>
                   </div>
 
                   <div 
                     className={`project-item-card compact ${activeDesign === 'batten' ? 'active' : ''}`} 
-                    onClick={() => {
-                      setActiveDesign('batten')
-                      setIsProjectsOpen(true)
-                    }}
+                    onClick={() => setActiveDesign('batten')}
                   >
                     <h3>Surface mounted LED batten</h3>
                   </div>
 
                   <div 
                     className={`project-item-card compact ${activeDesign === 'downlight' ? 'active' : ''}`} 
-                    onClick={() => {
-                      setActiveDesign('downlight')
-                      setIsProjectsOpen(true)
-                    }}
+                    onClick={() => setActiveDesign('downlight')}
                   >
                     <h3>Recessed downlight</h3>
                   </div>
@@ -124,9 +115,10 @@ export default function Controls({
                 letterSpacing: '0.3em',
                 color: '#94a3b8',
                 opacity: 0.8,
-                userSelect: 'none'
+                userSelect: 'none',
+                textTransform: 'uppercase'
               }}>
-                PAVILLION
+                {currentConcept.name}
               </h1>
             </div>
           )}
@@ -134,6 +126,17 @@ export default function Controls({
 
         {/* Secondary Right Card: Design Controls Drawer */}
         <aside className={`projects-stacked-card ${isProjectsOpen ? 'expanded' : ''} ${isCollapsed ? 'collapsed-hidden' : ''}`}>
+          {/* Close button tab on the outer edge (only visible when expanded) */}
+          {!isCollapsed && (
+            <button 
+              className={`close-drawer-tab ${isProjectsOpen ? 'visible' : ''}`}
+              onClick={() => setIsProjectsOpen(false)}
+              title="Close Controls Drawer"
+            >
+              <X size={12} />
+            </button>
+          )}
+
           {/* Peeking tab trigger (only clickable when left sidebar is expanded) */}
           {!isCollapsed && (
             <div 
@@ -148,34 +151,23 @@ export default function Controls({
             </div>
           )}
 
-          <div className="projects-card-content" style={{ position: 'relative' }}>
-            {/* Close Button to return card to stacked position */}
-            <button 
-              className="close-drawer-btn" 
-              onClick={() => setIsProjectsOpen(false)}
-              title="Close Drawer"
-            >
-              <X size={14} />
-            </button>
+          <div className="projects-card-content">
 
             {/* Application Logo & Active Design details */}
-            <div className="projects-header">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingRight: '28px' }}>
-                <div>
-                  <h1 style={{
-                    fontSize: '20px',
-                    fontWeight: '600',
-                    background: 'linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    lineHeight: '1.2'
-                  }}>
-                    PAVILLION
-                  </h1>
-                  <p style={{ fontSize: '10px', color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase', marginTop: '2px' }}>
-                    Luxe Architectural Visualization
-                  </p>
-                </div>
+            <div className="projects-header" style={{ paddingRight: '28px' }}>
+              <h1 style={{
+                fontSize: activeDesign === 'pavilion' ? '20px' : '15px',
+                fontWeight: '600',
+                background: 'linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                lineHeight: '1.2',
+                textTransform: 'uppercase'
+              }}>
+                {currentConcept.name}
+              </h1>
+              
+              <div className="tag-list" style={{ marginTop: '8px' }}>
                 <span className="tag" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                   <Sparkles size={10} color="#d4af37" /> R3F Mockup
                 </span>
@@ -184,7 +176,7 @@ export default function Controls({
               <hr className="sidebar-divider" style={{ margin: '14px 0' }} />
 
               <h2 style={{ fontSize: '13.5px', fontWeight: '600', color: '#fff' }}>
-                {currentConcept.title}
+                Details
               </h2>
               <p style={{ fontSize: '11.5px', color: '#94a3b8', lineHeight: '1.45', marginTop: '8px' }}>
                 {currentConcept.desc}
@@ -197,11 +189,6 @@ export default function Controls({
             </div>
 
             <hr className="sidebar-divider" />
-            
-            <div className="projects-header" style={{ marginTop: '4px' }}>
-              <h2>Design Controls</h2>
-              <p>Active 3D settings & features</p>
-            </div>
             
             <div className="projects-list" style={{ marginTop: '4px', gap: '16px' }}>
               {/* 1. Environment Selection */}

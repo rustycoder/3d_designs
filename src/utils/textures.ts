@@ -161,3 +161,84 @@ export function createConcreteTexture(): THREE.CanvasTexture {
   texture.repeat.set(2, 2)
   return texture
 }
+
+// Generate a ribbed/fluted diffuser texture for the LED batten
+export function createFlutedTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas')
+  canvas.width = 128
+  canvas.height = 128
+  const ctx = canvas.getContext('2d')
+
+  if (!ctx) return new THREE.CanvasTexture(canvas)
+
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+  const numRibs = 16
+  const ribWidth = canvas.width / numRibs
+
+  for (let i = 0; i < numRibs; i++) {
+    const x = i * ribWidth
+    const grad = ctx.createLinearGradient(x, 0, x + ribWidth, 0)
+    // Create soft dark edges on each rib to simulate a fluted 3D look
+    grad.addColorStop(0, '#e2e8f0')
+    grad.addColorStop(0.3, '#ffffff')
+    grad.addColorStop(0.7, '#ffffff')
+    grad.addColorStop(1, '#cbd5e1')
+
+    ctx.fillStyle = grad
+    ctx.fillRect(x, 0, ribWidth, canvas.height)
+  }
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
+  texture.repeat.set(25, 1) // Repeat along the length of the batten
+  return texture
+}
+
+// Generate a vertical aluminum fin / heat-sink texture for the recessed downlight
+// Simulates tight radial cooling fins: dark groove lines on a brushed aluminium base
+export function createHeatSinkTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas')
+  canvas.width = 256
+  canvas.height = 256
+  const ctx = canvas.getContext('2d')
+
+  if (!ctx) return new THREE.CanvasTexture(canvas)
+
+  // Dark anodised aluminium base
+  ctx.fillStyle = '#1a1a1e'
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+  // Draw vertical fin grooves (repeating pattern)
+  const numFins = 32
+  const finWidth = canvas.width / numFins
+
+  for (let i = 0; i < numFins; i++) {
+    const x = i * finWidth
+
+    // Fin body — slightly lighter than the base
+    const grad = ctx.createLinearGradient(x, 0, x + finWidth, 0)
+    grad.addColorStop(0,   '#111114') // dark groove edge
+    grad.addColorStop(0.15,'#2e2e34') // fin shoulder
+    grad.addColorStop(0.45,'#3c3c44') // fin top highlight
+    grad.addColorStop(0.55,'#3c3c44')
+    grad.addColorStop(0.85,'#2e2e34')
+    grad.addColorStop(1,   '#111114') // dark groove edge
+
+    ctx.fillStyle = grad
+    ctx.fillRect(x, 0, finWidth, canvas.height)
+  }
+
+  // Subtle horizontal banding to simulate lathe marks
+  for (let y = 0; y < canvas.height; y += 8) {
+    ctx.fillStyle = 'rgba(0,0,0,0.06)'
+    ctx.fillRect(0, y, canvas.width, 1)
+  }
+
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
+  return texture
+}

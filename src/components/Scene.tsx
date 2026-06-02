@@ -17,7 +17,10 @@ interface SceneProps {
   activeDesign: 'pavilion' | 'batten' | 'downlight'
 }
 
-// Camera Rig to smoothly animate the camera position and target
+// Camera Rig — TRULY ABSOLUTE navigation.
+// The camera moves ONLY on the very first app load (to set the initial position).
+// After that: switching designs, toggling day/dusk, opening drawers, toggling doors
+// — absolutely nothing moves the camera. Zero spring-back, ever.
 function CameraRig({ 
   preset, 
   activeDesign 
@@ -26,10 +29,11 @@ function CameraRig({
   activeDesign: 'pavilion' | 'batten' | 'downlight' 
 }) {
   const { camera } = useThree()
-  const isTransitioning = useRef(true)
-  const lastPreset = useRef(preset)
+  // Starts false — the useEffect on mount immediately sets it to true once
+  const isTransitioning = useRef(false)
+  const hasMounted = useRef(false)
   
-  // Target position and lookup targets
+  // Starting camera positions — used ONLY on initial app load
   const config = {
     default: {
       pos: new THREE.Vector3(-7.5, 1.4, 6.5),
@@ -52,37 +56,37 @@ function CameraRig({
       look: new THREE.Vector3(0.0, 2.4, 0.0)
     },
     downlight: {
-      pos: new THREE.Vector3(-3.2, 2.2, 4.2),
-      look: new THREE.Vector3(0.0, 1.8, 0.0)
+      pos: new THREE.Vector3(1.2, 1.8, 3.2),
+      look: new THREE.Vector3(0.0, 2.4, 0.0)
     }
   }
 
-  // Trigger transition when the preset or active design changes
+  const getConfigKey = (design: string, p: string): keyof typeof config =>
+    (design === 'pavilion' ? p : design) as keyof typeof config
+
+  // Fire ONCE on mount — sets the initial camera position only
   useEffect(() => {
-    isTransitioning.current = true
-    lastPreset.current = preset
-  }, [preset, activeDesign])
+    if (!hasMounted.current) {
+      hasMounted.current = true
+      isTransitioning.current = true
+    }
+    // Intentionally no dependencies — this effect only runs once on mount.
+    // Design changes, preset changes, and all other state changes are completely ignored.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useFrame((state) => {
     if (!isTransitioning.current) return
 
-    const targetConfig = config[preset]
+    const key = getConfigKey(activeDesign, preset)
+    const targetConfig = config[key]
     const orbitControls = state.controls as any
 
     if (orbitControls) {
-      const activePreset = activeDesign === 'pavilion' ? preset : activeDesign
-      const targetConfig = config[activePreset]
-      
-      // Lerp camera position
       camera.position.lerp(targetConfig.pos, 0.05)
-      
-      // Lerp controls target (where OrbitControls rotates around and looks at)
       orbitControls.target.lerp(targetConfig.look, 0.05)
-      
-      // Force OrbitControls to recalculate camera angles
       orbitControls.update()
 
-      // Stop transitioning when close enough
       const posDist = camera.position.distanceTo(targetConfig.pos)
       const lookDist = orbitControls.target.distanceTo(targetConfig.look)
 
@@ -90,16 +94,13 @@ function CameraRig({
         camera.position.copy(targetConfig.pos)
         orbitControls.target.copy(targetConfig.look)
         orbitControls.update()
+        // Done — camera will never move again unless the user drags/scrolls
         isTransitioning.current = false
       }
     } else {
-      const activePreset = activeDesign === 'pavilion' ? preset : activeDesign
-      const targetConfig = config[activePreset]
-
-      // Fallback before OrbitControls is fully bound/active
+      // Fallback: OrbitControls not yet bound on the very first frames
       camera.position.lerp(targetConfig.pos, 0.05)
       camera.lookAt(targetConfig.look)
-      
       const posDist = camera.position.distanceTo(targetConfig.pos)
       if (posDist < 0.02) {
         camera.position.copy(targetConfig.pos)
@@ -123,7 +124,7 @@ export default function Scene({
   // Deep navy dusk sky background or light grey day sky
   const skyColor = activeDesign === 'pavilion'
     ? (mode === 'dusk' ? '#070a13' : '#e0f2fe')
-    : '#030408' // Dark interior backdrop for showcase spaces
+    : (mode === 'day' ? '#ffffff' : '#030408')
   const fogDensity = activeDesign === 'pavilion' ? 0.035 : 0.0
 
   return (
@@ -173,7 +174,6 @@ export default function Scene({
           maxPolarAngle={Math.PI / 2 - 0.02} // Stop camera going under floor
           minDistance={2}
           maxDistance={25}
-          target={[2.0, 1.6, 0.0]}
         />
       </Canvas>
     </div>
