@@ -113,7 +113,7 @@ export default function Controls({
                 fontSize: '13px',
                 fontWeight: '600',
                 letterSpacing: '0.3em',
-                color: '#94a3b8',
+                color: 'var(--text-secondary)',
                 opacity: 0.8,
                 userSelect: 'none',
                 textTransform: 'uppercase'
@@ -175,10 +175,10 @@ export default function Controls({
               
               <hr className="sidebar-divider" style={{ margin: '14px 0' }} />
 
-              <h2 style={{ fontSize: '13.5px', fontWeight: '600', color: '#fff' }}>
+              <h2 style={{ fontSize: '13.5px', fontWeight: '600', color: 'var(--text-primary)' }}>
                 Details
               </h2>
-              <p style={{ fontSize: '11.5px', color: '#94a3b8', lineHeight: '1.45', marginTop: '8px' }}>
+              <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.45', marginTop: '8px' }}>
                 {currentConcept.desc}
               </p>
               <div className="tag-list" style={{ marginTop: '8px' }}>

@@ -4,7 +4,7 @@
   font-weight: 400;
 
   color-scheme: dark light;
-  color: #f8fafc;
+  color: var(--text-primary);
   background-color: #0b0c10;
 
   font-synthesis: none;
@@ -22,6 +22,14 @@
   --accent-orange: #f97316;
   
   --font-display: 'Outfit', 'Inter', sans-serif;
+
+  /* ── Typography color tokens ─────────────────────────────── */
+  /* Use ONLY these for all text colors. Never hardcode elsewhere. */
+  --text-primary:   #e8eaf0;   /* Main headings, active labels, important text  */
+  --text-secondary: #94a3b8;   /* Descriptions, captions, subtitles             */
+  --text-muted:     #5a6680;   /* Tertiary hints, dimmed metadata               */
+  --text-accent:    #a5b4fc;   /* Indigo accent: gradient endpoints, highlights  */
+  --text-inverse:   #0b0c10;   /* Dark text on light/colored backgrounds        */
 }
 
 * {
@@ -107,7 +115,7 @@ h1, h2, h3, h4 {
 
 .logo-section p {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-secondary);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-top: 2px;
@@ -217,7 +225,7 @@ h1, h2, h3, h4 {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #e2e8f0;
+  color: var(--text-primary);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 6px;
 }
@@ -232,7 +240,7 @@ h1, h2, h3, h4 {
 .preset-btn {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  color: #cbd5e1;
+  color: var(--text-secondary);
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 12px;
@@ -248,13 +256,13 @@ h1, h2, h3, h4 {
 .preset-btn:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .preset-btn.active {
   background: rgba(99, 102, 241, 0.2);
   border-color: #6366f1;
-  color: #a5b4fc;
+  color: var(--text-accent);
   box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
 }
 
@@ -271,7 +279,7 @@ h1, h2, h3, h4 {
   flex: 1;
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: var(--text-secondary);
   padding: 8px;
   border-radius: 8px;
   font-size: 13px;
@@ -286,7 +294,7 @@ h1, h2, h3, h4 {
 
 .time-btn.active {
   background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  color: var(--text-primary);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -301,11 +309,11 @@ h1, h2, h3, h4 {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-secondary);
 }
 
 .slider-label span.value {
-  color: #f1f5f9;
+  color: var(--text-primary);
   font-family: monospace;
 }
 
@@ -343,7 +351,7 @@ h1, h2, h3, h4 {
 
 .switch-label {
   font-size: 13px;
-  color: #cbd5e1;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -419,7 +427,7 @@ input:checked + .switch-slider:before {
 
 .architect-info p {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-secondary);
   line-height: 1.4;
 }
 
@@ -432,7 +440,7 @@ input:checked + .switch-slider:before {
 
 .tag {
   background: rgba(255, 255, 255, 0.05);
-  color: #cbd5e1;
+  color: var(--text-secondary);
   font-size: 10px;
   padding: 3px 8px;
   border-radius: 4px;
@@ -445,7 +453,7 @@ input:checked + .switch-slider:before {
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 400;
   display: flex;
@@ -491,7 +499,7 @@ input:checked + .switch-slider:before {
 .loading-text {
   font-family: var(--font-display);
   font-size: 16px;
-  color: #94a3b8;
+  color: var(--text-primary);
   letter-spacing: 0.05em;
 }
 
@@ -547,7 +555,7 @@ input:checked + .switch-slider:before {
   transform: translate(24px, 0px) rotate(0deg);
   display: flex;
   flex-direction: column;
-  color: #f8fafc;
+  color: var(--text-primary);
   pointer-events: auto; /* enable interaction even behind */
 }
 
@@ -598,12 +606,12 @@ input:checked + .switch-slider:before {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  color: #94a3b8;
+  color: var(--text-secondary);
   transition: color 0.2s;
 }
 
 .peeking-tab:hover .peeking-tab-content {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .peeking-tab-content span {
@@ -633,13 +641,13 @@ input:checked + .switch-slider:before {
 .projects-header h2 {
   font-size: 15px;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-primary);
   letter-spacing: 0.02em;
 }
 
 .projects-header p {
   font-size: 11px;
-  color: #64748b;
+  color: var(--text-muted);
   margin-top: 4px;
 }
 
@@ -693,12 +701,12 @@ input:checked + .switch-slider:before {
   font-size: 12.5px;
   font-weight: 500;
   margin: 0;
-  color: #cbd5e1;
+  color: var(--text-secondary);
   transition: color 0.2s;
 }
 
 .project-item-card.compact.active h3 {
-  color: #fff;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -752,12 +760,12 @@ input:checked + .switch-slider:before {
 .project-info h3 {
   font-size: 13px;
   font-weight: 600;
-  color: #e2e8f0;
+  color: var(--text-primary);
 }
 
 .project-info p {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-secondary);
   line-height: 1.4;
 }
 
@@ -775,7 +783,7 @@ input:checked + .switch-slider:before {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #94a3b8;
+  color: var(--text-secondary);
   cursor: pointer;
   z-index: 10;
   transition: all 0.3s ease;
@@ -794,7 +802,7 @@ input:checked + .switch-slider:before {
 .close-drawer-tab:hover {
   background: #1e293b;
   border-color: rgba(255, 255, 255, 0.15);
-  color: #fff;
+  color: var(--text-primary);
   padding-left: 12px;
   width: 32px;
 }
