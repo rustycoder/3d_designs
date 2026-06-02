@@ -394,63 +394,172 @@ export default function Pavilion({
       {/* ======================================================== */}
       {/* SLIDING GLASS DOORS (Rear boundary)                      */}
       {/* ======================================================== */}
-      <group position={[3.5, 0.4, -3.35]}>
+      <group position={[1.5, 0.4, -3.35]}>
         {/* Metal tracks (Top and Bottom) */}
         {/* Bottom track */}
         <mesh position={[0, 0.02, 0]} castShadow>
-          <boxGeometry args={[5.0, 0.04, 0.14]} />
+          <boxGeometry args={[9.0, 0.04, 0.16]} />
           <meshStandardMaterial color="#334155" metalness={0.8} roughness={0.2} />
         </mesh>
         {/* Top track */}
         <mesh position={[0, 3.58, 0]}>
-          <boxGeometry args={[5.0, 0.04, 0.14]} />
+          <boxGeometry args={[9.0, 0.04, 0.16]} />
           <meshStandardMaterial color="#334155" metalness={0.8} roughness={0.2} />
         </mesh>
 
-        {/* Panel 1: Fixed/Closed Glass Panel (Right side) */}
-        <group position={[1.2, 1.8, 0]}>
-          {/* Metal border frame */}
-          <mesh castShadow>
-            <boxGeometry args={[2.5, 3.5, 0.06]} />
-            <meshStandardMaterial color="#475569" metalness={0.8} roughness={0.2} wireframe />
-          </mesh>
-          {/* Glass Pane */}
-          <mesh>
-            <boxGeometry args={[2.42, 3.42, 0.015]} />
-            <meshPhysicalMaterial
-              color="#e2e8f0"
-              transparent={true}
-              opacity={0.2}
-              transmission={0.92}
-              ior={1.5}
-              roughness={0.05}
-              depthWrite={false}
-            />
-          </mesh>
-        </group>
+        {/* Panel A: Fixed Glass Panel (Far Left) */}
+        <GlassDoorPanel
+          width={2.25}
+          height={3.5}
+          depth={0.06}
+          borderThickness={0.07}
+          position={[-3.375, 1.8, -0.02]}
+        />
 
-        {/* Panel 2: Sliding/Open Glass Panel (Slid to the right, overlapping Panel 1) */}
-        <group position={[-0.2, 1.8, 0.05]}>
-          {/* Metal border frame */}
-          <mesh castShadow>
-            <boxGeometry args={[2.5, 3.5, 0.06]} />
-            <meshStandardMaterial color="#475569" metalness={0.8} roughness={0.2} wireframe />
-          </mesh>
-          {/* Glass Pane */}
-          <mesh>
-            <boxGeometry args={[2.42, 3.42, 0.015]} />
-            <meshPhysicalMaterial
-              color="#e2e8f0"
-              transparent={true}
-              opacity={0.2}
-              transmission={0.92}
-              ior={1.5}
-              roughness={0.05}
-              depthWrite={false}
-            />
-          </mesh>
-        </group>
+        {/* Panel B: Sliding Glass Panel (Center Left) */}
+        <GlassDoorPanel
+          width={2.25}
+          height={3.5}
+          depth={0.06}
+          borderThickness={0.07}
+          groupRef={leftSlidingRef}
+          position={[-1.125, 1.8, 0.02]}
+          isInteractive={true}
+          onClick={onToggleDoor}
+          hasHandle={true}
+          handleSide={1} // Right side
+        />
+
+        {/* Panel C: Sliding Glass Panel (Center Right) */}
+        <GlassDoorPanel
+          width={2.25}
+          height={3.5}
+          depth={0.06}
+          borderThickness={0.07}
+          groupRef={rightSlidingRef}
+          position={[1.125, 1.8, 0.02]}
+          isInteractive={true}
+          onClick={onToggleDoor}
+          hasHandle={true}
+          handleSide={-1} // Left side
+        />
+
+        {/* Panel D: Fixed Glass Panel (Far Right) */}
+        <GlassDoorPanel
+          width={2.25}
+          height={3.5}
+          depth={0.06}
+          borderThickness={0.07}
+          position={[3.375, 1.8, -0.02]}
+        />
       </group>
+    </group>
+  )
+}
+
+// ========================================================
+// GLASS DOOR PANEL COMPONENT
+// ========================================================
+
+interface DoorPanelProps {
+  width: number
+  height: number
+  depth: number
+  borderThickness: number
+  groupRef?: React.RefObject<THREE.Group>
+  position: [number, number, number]
+  isInteractive?: boolean
+  onClick?: () => void
+  hasHandle?: boolean
+  handleSide?: number // 1 for right, -1 for left
+}
+
+function GlassDoorPanel({
+  width,
+  height,
+  depth,
+  borderThickness,
+  groupRef,
+  position,
+  isInteractive = false,
+  onClick,
+  hasHandle = false,
+  handleSide = 1
+}: DoorPanelProps) {
+  const glassW = width - borderThickness * 2
+  const glassH = height - borderThickness * 2
+
+  const handlePointerOver = (e: any) => {
+    if (isInteractive) {
+      e.stopPropagation()
+      document.body.style.cursor = 'pointer'
+    }
+  }
+
+  const handlePointerOut = (e: any) => {
+    if (isInteractive) {
+      e.stopPropagation()
+      document.body.style.cursor = 'auto'
+    }
+  }
+
+  return (
+    <group
+      ref={groupRef}
+      position={position}
+      onClick={(e) => {
+        if (isInteractive && onClick) {
+          e.stopPropagation()
+          onClick()
+        }
+      }}
+      onPointerOver={handlePointerOver}
+      onPointerOut={handlePointerOut}
+    >
+      {/* Outer borders (Solid charcoal frame) */}
+      {/* Top border */}
+      <mesh position={[0, height / 2 - borderThickness / 2, 0]} castShadow receiveShadow>
+        <boxGeometry args={[width, borderThickness, depth]} />
+        <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.2} />
+      </mesh>
+      {/* Bottom border */}
+      <mesh position={[0, -height / 2 + borderThickness / 2, 0]} castShadow receiveShadow>
+        <boxGeometry args={[width, borderThickness, depth]} />
+        <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.2} />
+      </mesh>
+      {/* Left border */}
+      <mesh position={[-width / 2 + borderThickness / 2, 0, 0]} castShadow receiveShadow>
+        <boxGeometry args={[borderThickness, height - borderThickness * 2, depth]} />
+        <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.2} />
+      </mesh>
+      {/* Right border */}
+      <mesh position={[width / 2 - borderThickness / 2, 0, 0]} castShadow receiveShadow>
+        <boxGeometry args={[borderThickness, height - borderThickness * 2, depth]} />
+        <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.2} />
+      </mesh>
+
+      {/* Glass Pane */}
+      <mesh receiveShadow>
+        <boxGeometry args={[glassW, glassH, 0.015]} />
+        <meshPhysicalMaterial
+          color="#bae6fd"
+          transparent={true}
+          opacity={0.15}
+          transmission={0.95}
+          ior={1.5}
+          roughness={0.05}
+          depthWrite={false}
+          metalness={0.1}
+        />
+      </mesh>
+
+      {/* Minimalist vertical handle bar */}
+      {hasHandle && (
+        <mesh position={[handleSide * (width / 2 - borderThickness - 0.04), 0, 0.05]} castShadow>
+          <cylinderGeometry args={[0.012, 0.012, 0.8, 8]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.1} />
+        </mesh>
+      )}
     </group>
   )
 }

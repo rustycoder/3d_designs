@@ -5,6 +5,7 @@ import Controls from './components/Controls'
 export default function App() {
   const [mode, setMode] = useState<'day' | 'dusk'>('day')
   const [isDoorOpen, setIsDoorOpen] = useState(false)
+  const [activeDesign, setActiveDesign] = useState<'pavilion' | 'batten' | 'downlight'>('pavilion')
   
   // Loading screen state
   const [isLoading, setIsLoading] = useState(true)
@@ -36,6 +37,7 @@ export default function App() {
         cameraPreset="side"
         isDoorOpen={isDoorOpen}
         setIsDoorOpen={setIsDoorOpen}
+        activeDesign={activeDesign}
       />
 
       {/* Sleek UI Control Panel and Dashboard */}
@@ -44,6 +46,8 @@ export default function App() {
         setMode={setMode}
         isDoorOpen={isDoorOpen}
         setIsDoorOpen={setIsDoorOpen}
+        activeDesign={activeDesign}
+        setActiveDesign={setActiveDesign}
       />
     </div>
   )

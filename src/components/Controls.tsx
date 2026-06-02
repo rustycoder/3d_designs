@@ -6,10 +6,11 @@ import {
   Sparkles,
   ChevronLeft,
   ChevronRight,
-  Folder,
-  Compass,
-  Mountain,
-  Home
+  Sliders,
+  Layers,
+  Lightbulb,
+  Home,
+  X
 } from 'lucide-react'
 
 interface ControlsProps {
@@ -17,25 +18,50 @@ interface ControlsProps {
   setMode: (mode: 'day' | 'dusk') => void
   isDoorOpen: boolean
   setIsDoorOpen: (open: boolean) => void
+  activeDesign: 'pavilion' | 'batten' | 'downlight'
+  setActiveDesign: (design: 'pavilion' | 'batten' | 'downlight') => void
 }
 
 export default function Controls({
   mode,
   setMode,
   isDoorOpen,
-  setIsDoorOpen
+  setIsDoorOpen,
+  activeDesign,
+  setActiveDesign
 }: ControlsProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isProjectsOpen, setIsProjectsOpen] = useState(false)
 
+  // Dynamic description card content based on selected lighting design/product
+  const conceptContent = {
+    pavilion: {
+      title: "Pavilion Details",
+      desc: "A minimalist luxury outdoor pavilion designed with structural wood framing, a floating concrete foundation slab, and full-height folding glass facades. The pavilion sits cantilevered over a dark reflecting pond, creating continuous visual symmetry.",
+      tags: ["Wood & Concrete", "Reflecting Water", "Indoor-Outdoor"]
+    },
+    batten: {
+      title: "LED Batten Details",
+      desc: "An empty minimalist gallery space designed to showcase the linear light distribution of a surface-mounted architectural LED batten. The fixture provides a uniform light wash on the ceiling and floor, highlighting structural lines.",
+      tags: ["Linear Fixture", "Minimalist Space", "Wall Wash"]
+    },
+    downlight: {
+      title: "Downlight Details",
+      desc: "A dark concrete exhibition space highlighting recessed downlight projection. A grid of spotlights creates sharp cones of high-contrast light pools on the floor with soft edge fall-offs, demonstrating anti-glare shielding.",
+      tags: ["Grid Pattern", "Spot Projection", "High Contrast"]
+    }
+  }
+
+  const currentConcept = conceptContent[activeDesign]
+
   return (
     <div className="ui-overlay">
       {/* ======================================================== */}
-      {/* SIDEBAR CONTAINER & STACKED PROJECT CARD                 */}
+      {/* SIDEBAR CONTAINER & STACKED DETAILS/CONTROLS CARD        */}
       {/* ======================================================== */}
       <div className="sidebar-container interactive">
         
-        {/* Main Controls Sidebar */}
+        {/* Main Left Card: Design Listings Only */}
         <aside className={`controls-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
           {/* Collapse toggle button on the sidebar edge */}
           <button
@@ -51,81 +77,39 @@ export default function Controls({
 
           {!isCollapsed ? (
             <div className="sidebar-content">
-              {/* 1. Header / Logo */}
-              <div className="logo-section">
-                <h1>PAVILLION</h1>
-                <p>Luxe Architectural Visualization</p>
-                <div className="tag-list" style={{ marginTop: '8px' }}>
-                  <span className="tag" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                    <Sparkles size={10} color="#d4af37" /> R3F Mockup
-                  </span>
-                </div>
-              </div>
-
-              <hr className="sidebar-divider" />
-
-              {/* 2. Environment Selection */}
+              {/* Design Listings Selection */}
               <div className="control-section">
-                <h2>Environment Mode</h2>
-                <div className="time-toggle">
-                  <button
-                    className={`time-btn ${mode === 'day' ? 'active' : ''}`}
-                    onClick={() => setMode('day')}
-                    title="Switch to Bright Day"
+                <h2>3D Visualizer Designs</h2>
+                <div className="projects-list" style={{ marginTop: 0 }}>
+                  <div 
+                    className={`project-item-card compact ${activeDesign === 'pavilion' ? 'active' : ''}`} 
+                    onClick={() => {
+                      setActiveDesign('pavilion')
+                      setIsProjectsOpen(true)
+                    }}
                   >
-                    <Sun size={14} />
-                    Daylight
-                  </button>
-                  <button
-                    className={`time-btn ${mode === 'dusk' ? 'active' : ''}`}
-                    onClick={() => setMode('dusk')}
-                    title="Switch to Twilight / Dusk"
-                  >
-                    <Moon size={14} />
-                    Dusk (Sunset)
-                  </button>
-                </div>
-              </div>
-
-              <hr className="sidebar-divider" />
-
-              {/* 3. Pavilion Sliding Door Control */}
-              <div className="control-section">
-                <h2>Pavilion Features</h2>
-                <div className="switch-control">
-                  <div className="switch-label">
-                    <Sparkles size={13} color="#6366f1" />
-                    <span>Sliding Glass Door</span>
+                    <h3>Pavilion</h3>
                   </div>
-                  <label className="switch-btn">
-                    <input
-                      type="checkbox"
-                      checked={isDoorOpen}
-                      onChange={(e) => setIsDoorOpen(e.target.checked)}
-                    />
-                    <span className="switch-slider"></span>
-                  </label>
-                </div>
-              </div>
 
-              <hr className="sidebar-divider" />
+                  <div 
+                    className={`project-item-card compact ${activeDesign === 'batten' ? 'active' : ''}`} 
+                    onClick={() => {
+                      setActiveDesign('batten')
+                      setIsProjectsOpen(true)
+                    }}
+                  >
+                    <h3>Surface mounted LED batten</h3>
+                  </div>
 
-              {/* 4. Concept description */}
-              <div className="control-section">
-                <h2>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Info size={13} color="#6366f1" /> Architectural Concept
-                  </span>
-                </h2>
-                <p style={{ fontSize: '12px', color: '#94a3b8', lineHeight: '1.5' }}>
-                  A minimalist luxury outdoor pavilion designed with structural wood framing,
-                  a floating concrete foundation slab, and full-height folding glass facades.
-                  The pavilion sits cantilevered over a dark reflecting pond, creating continuous visual symmetry.
-                </p>
-                <div className="tag-list" style={{ marginTop: '6px' }}>
-                  <span className="tag">Wood & Concrete</span>
-                  <span className="tag">Reflecting Water</span>
-                  <span className="tag">Indoor-Outdoor</span>
+                  <div 
+                    className={`project-item-card compact ${activeDesign === 'downlight' ? 'active' : ''}`} 
+                    onClick={() => {
+                      setActiveDesign('downlight')
+                      setIsProjectsOpen(true)
+                    }}
+                  >
+                    <h3>Recessed downlight</h3>
+                  </div>
                 </div>
               </div>
             </div>
@@ -148,70 +132,121 @@ export default function Controls({
           )}
         </aside>
 
-        {/* Stacked Projects Card (Sits behind main sidebar, slides out on click) */}
+        {/* Secondary Right Card: Design Controls Drawer */}
         <aside className={`projects-stacked-card ${isProjectsOpen ? 'expanded' : ''} ${isCollapsed ? 'collapsed-hidden' : ''}`}>
-          {/* Peeking tab trigger (only clickable when sidebar is expanded) */}
+          {/* Peeking tab trigger (only clickable when left sidebar is expanded) */}
           {!isCollapsed && (
             <div 
               className="peeking-tab" 
               onClick={() => setIsProjectsOpen(!isProjectsOpen)}
-              title={isProjectsOpen ? "Close Design Deck" : "Explore other 3D designs"}
+              title={isProjectsOpen ? "Close Controls Drawer" : "Open Controls Drawer"}
             >
               <div className="peeking-tab-content">
-                <Folder size={11} style={{ transform: 'rotate(-90deg)', marginBottom: '4px' }} />
-                <span>EXPLORE DESIGNS</span>
+                <Sliders size={11} style={{ transform: 'rotate(-90deg)', marginBottom: '4px' }} />
+                <span>CONTROLS</span>
               </div>
             </div>
           )}
 
-          <div className="projects-card-content">
+          <div className="projects-card-content" style={{ position: 'relative' }}>
+            {/* Close Button to return card to stacked position */}
+            <button 
+              className="close-drawer-btn" 
+              onClick={() => setIsProjectsOpen(false)}
+              title="Close Drawer"
+            >
+              <X size={14} />
+            </button>
+
+            {/* Application Logo & Active Design details */}
             <div className="projects-header">
-              <h2>Other 3D Designs</h2>
-              <p>Luxury architectural concepts by Studio Lumen</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingRight: '28px' }}>
+                <div>
+                  <h1 style={{
+                    fontSize: '20px',
+                    fontWeight: '600',
+                    background: 'linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    lineHeight: '1.2'
+                  }}>
+                    PAVILLION
+                  </h1>
+                  <p style={{ fontSize: '10px', color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase', marginTop: '2px' }}>
+                    Luxe Architectural Visualization
+                  </p>
+                </div>
+                <span className="tag" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <Sparkles size={10} color="#d4af37" /> R3F Mockup
+                </span>
+              </div>
+              
+              <hr className="sidebar-divider" style={{ margin: '14px 0' }} />
+
+              <h2 style={{ fontSize: '13.5px', fontWeight: '600', color: '#fff' }}>
+                {currentConcept.title}
+              </h2>
+              <p style={{ fontSize: '11.5px', color: '#94a3b8', lineHeight: '1.45', marginTop: '8px' }}>
+                {currentConcept.desc}
+              </p>
+              <div className="tag-list" style={{ marginTop: '8px' }}>
+                {currentConcept.tags.map((tag) => (
+                  <span key={tag} className="tag">{tag}</span>
+                ))}
+              </div>
+            </div>
+
+            <hr className="sidebar-divider" />
+            
+            <div className="projects-header" style={{ marginTop: '4px' }}>
+              <h2>Design Controls</h2>
+              <p>Active 3D settings & features</p>
             </div>
             
-            <div className="projects-list">
-              <div className="project-item-card" onClick={() => alert("Loading Lakeside Glass Villa visualizer mockup...")}>
-                <div className="project-icon-wrapper villa">
-                  <Compass size={18} />
-                </div>
-                <div className="project-info">
-                  <h3>Lakeside Glass Villa</h3>
-                  <p>Cantilevered glass structure with warm birch accents, floating over a twilight lake.</p>
-                  <div className="tag-list">
-                    <span className="tag">Glass & Steel</span>
-                    <span className="tag">Lake View</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="project-item-card" onClick={() => alert("Loading Brutalist Desert Oasis visualizer mockup...")}>
-                <div className="project-icon-wrapper oasis">
-                  <Mountain size={18} />
-                </div>
-                <div className="project-info">
-                  <h3>Brutalist Desert Oasis</h3>
-                  <p>Raw concrete forms and sunken lounges integrated with natural desert landscaping.</p>
-                  <div className="tag-list">
-                    <span className="tag">Raw Concrete</span>
-                    <span className="tag">Desert Oasis</span>
-                  </div>
+            <div className="projects-list" style={{ marginTop: '4px', gap: '16px' }}>
+              {/* 1. Environment Selection */}
+              <div className="control-section">
+                <h2 style={{ fontSize: '12px' }}>Environment Mode</h2>
+                <div className="time-toggle">
+                  <button
+                    className={`time-btn ${mode === 'day' ? 'active' : ''}`}
+                    onClick={() => setMode('day')}
+                    title="Switch to Bright Day"
+                  >
+                    <Sun size={14} />
+                    Daylight
+                  </button>
+                  <button
+                    className={`time-btn ${mode === 'dusk' ? 'active' : ''}`}
+                    onClick={() => setMode('dusk')}
+                    title="Switch to Twilight / Dusk"
+                  >
+                    <Moon size={14} />
+                    Dusk (Sunset)
+                  </button>
                 </div>
               </div>
 
-              <div className="project-item-card" onClick={() => alert("Loading Nordic Forest Cabin visualizer mockup...")}>
-                <div className="project-icon-wrapper cabin">
-                  <Home size={18} />
-                </div>
-                <div className="project-info">
-                  <h3>Nordic Forest Cabin</h3>
-                  <p>Dark timber A-frame with full-height double-glazed windows, nested in pine woods.</p>
-                  <div className="tag-list">
-                    <span className="tag">Timber</span>
-                    <span className="tag">Forest</span>
+              {/* 2. Pavilion Features (Only visible when Pavilion is active) */}
+              {activeDesign === 'pavilion' && (
+                <div className="control-section">
+                  <h2 style={{ fontSize: '12px' }}>Pavilion Features</h2>
+                  <div className="switch-control">
+                    <div className="switch-label">
+                      <Sparkles size={13} color="#6366f1" />
+                      <span>Sliding Glass Door</span>
+                    </div>
+                    <label className="switch-btn">
+                      <input
+                        type="checkbox"
+                        checked={isDoorOpen}
+                        onChange={(e) => setIsDoorOpen(e.target.checked)}
+                      />
+                      <span className="switch-slider"></span>
+                    </label>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </aside>
