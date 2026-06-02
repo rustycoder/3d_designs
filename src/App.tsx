@@ -24,7 +24,7 @@ export default function App() {
       {isLoading && (
         <div className="loading-screen" style={{ opacity: isLoading ? 1 : 0 }}>
           <div className="spinner"></div>
-          <p className="loading-text">PAVILLION</p>
+          <p className="loading-text">3D Visualizer Designs</p>
           <p style={{ color: '#64748b', fontSize: '12px' }}>Compiling 3D Scene Shader...</p>
         </div>
       )}
