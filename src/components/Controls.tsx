@@ -18,8 +18,8 @@ interface ControlsProps {
   setMode: (mode: 'day' | 'dusk') => void
   isDoorOpen: boolean
   setIsDoorOpen: (open: boolean) => void
-  activeDesign: 'pavilion' | 'batten' | 'downlight' | 'nail'
-  setActiveDesign: (design: 'pavilion' | 'batten' | 'downlight' | 'nail') => void
+  activeDesign: 'pavilion' | 'batten' | 'downlight' | 'lantern' | 'tree'
+  setActiveDesign: (design: 'pavilion' | 'batten' | 'downlight' | 'lantern' | 'tree') => void
 }
 
 export default function Controls({
@@ -50,10 +50,15 @@ export default function Controls({
       desc: "A precision-engineered recessed downlight: 75mm aperture, 88mm body height. Features a deep anti-glare baffle, anodised aluminium heat-sink with 32 radial cooling fins, a die-cast driver housing, and 4 spring-clip mounting brackets for tool-less ceiling installation.",
       tags: ["75mm Aperture", "Anti-Glare Baffle", "Radial Heat Sink"]
     },
-    nail: {
-      name: "Nail",
-      desc: "A high-fidelity GLB model rendered with physically-based materials and three-point studio lighting. Demonstrates seamless integration of external 3D assets using the useGLTF loader, with auto-centering, PBR material upgrades, and passive auto-rotation.",
-      tags: ["GLB Model", "PBR Materials", "Studio Lighting"]
+    lantern: {
+      name: "Lantern",
+      desc: "A beautifully crafted decorative lantern rendered with physically-based materials. Warm ambient glow simulates the soft, inviting light characteristic of traditional lantern design — ideal for exterior architectural and landscape lighting contexts.",
+      tags: ["GLB Model", "PBR Materials", "Warm Glow"]
+    },
+    tree: {
+      name: "Tree",
+      desc: "A detailed high-fidelity tree model showcasing naturalistic geometry and material layering. Rendered with outdoor hemispheric lighting to simulate natural sky bounce — perfect for landscape, park, or outdoor architectural visualisation contexts.",
+      tags: ["GLB Model", "Landscape Asset", "Outdoor Lighting"]
     }
   }
 
@@ -108,10 +113,17 @@ export default function Controls({
                   </div>
 
                   <div 
-                    className={`project-item-card compact ${activeDesign === 'nail' ? 'active' : ''}`} 
-                    onClick={() => setActiveDesign('nail')}
+                    className={`project-item-card compact ${activeDesign === 'lantern' ? 'active' : ''}`} 
+                    onClick={() => setActiveDesign('lantern')}
                   >
-                    <h3>Nail</h3>
+                    <h3>Lantern</h3>
+                  </div>
+
+                  <div 
+                    className={`project-item-card compact ${activeDesign === 'tree' ? 'active' : ''}`} 
+                    onClick={() => setActiveDesign('tree')}
+                  >
+                    <h3>Tree</h3>
                   </div>
                 </div>
               </div>

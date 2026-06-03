@@ -6,7 +6,8 @@ import Pavilion from './Pavilion'
 import Landscape from './Landscape'
 import Lighting from './Lighting'
 import ShowcaseSpaces from './ShowcaseSpaces'
-import NailModel from './NailModel'
+import LanternModel from './LanternModel'
+import TreeModel from './TreeModel'
 
 interface SceneProps {
   mode: 'day' | 'dusk'
@@ -15,7 +16,7 @@ interface SceneProps {
   cameraPreset: 'default' | 'side' | 'interior' | 'top'
   isDoorOpen: boolean
   setIsDoorOpen: (open: boolean) => void
-  activeDesign: 'pavilion' | 'batten' | 'downlight' | 'nail'
+  activeDesign: 'pavilion' | 'batten' | 'downlight' | 'lantern' | 'tree'
 }
 
 // Camera Rig — TRULY ABSOLUTE navigation.
@@ -27,7 +28,7 @@ function CameraRig({
   activeDesign 
 }: { 
   preset: 'default' | 'side' | 'interior' | 'top'
-  activeDesign: 'pavilion' | 'batten' | 'downlight' | 'nail' 
+  activeDesign: 'pavilion' | 'batten' | 'downlight' | 'lantern' | 'tree'
 }) {
   const { camera } = useThree()
   // Starts false — the useEffect on mount immediately sets it to true once
@@ -60,9 +61,13 @@ function CameraRig({
       pos: new THREE.Vector3(1.2, 1.8, 3.2),
       look: new THREE.Vector3(0.0, 2.4, 0.0)
     },
-    nail: {
-      pos: new THREE.Vector3(0.0, 2.8, 4.5),
-      look: new THREE.Vector3(0.0, 2.4, 0.0)
+    lantern: {
+      pos: new THREE.Vector3(0.0, 2.0, 4.0),
+      look: new THREE.Vector3(0.0, 1.0, 0.0)
+    },
+    tree: {
+      pos: new THREE.Vector3(0.0, 2.5, 7.0),
+      look: new THREE.Vector3(0.0, 1.8, 0.0)
     }
   }
 
@@ -165,8 +170,10 @@ export default function Scene({
             <Pavilion isDoorOpen={isDoorOpen} onToggleDoor={() => setIsDoorOpen(!isDoorOpen)} />
             <Landscape />
           </>
-        ) : activeDesign === 'nail' ? (
-          <NailModel mode={mode} />
+        ) : activeDesign === 'lantern' ? (
+          <LanternModel mode={mode} />
+        ) : activeDesign === 'tree' ? (
+          <TreeModel mode={mode} />
         ) : (
           <ShowcaseSpaces type={activeDesign as 'batten' | 'downlight'} mode={mode} />
         )}

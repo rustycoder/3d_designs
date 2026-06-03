@@ -2,12 +2,10 @@ import { Suspense, useMemo, Component, ReactNode } from 'react'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
-interface NailModelProps {
+interface TreeModelProps {
   mode: 'day' | 'dusk'
 }
 
-// ErrorBoundary — catches useGLTF errors so the canvas never crashes.
-// Shows nothing visible but logs the real error to the browser console.
 class GLBErrorBoundary extends Component<
   { children: ReactNode },
   { hasError: boolean }
@@ -17,18 +15,16 @@ class GLBErrorBoundary extends Component<
     return { hasError: true }
   }
   componentDidCatch(err: Error, info: React.ErrorInfo) {
-    // Check the browser console (F12) for the real error message
-    console.error('[NailModel] GLB failed to load:', err.message, info)
+    console.error('[TreeModel] GLB failed to load:', err.message, info)
   }
   render() {
-    if (this.state.hasError) return null   // transparent — no red cube
+    if (this.state.hasError) return null
     return this.props.children
   }
 }
 
-// Simplest possible model loader — exactly the user's reference pattern
 function Model() {
-  const { scene } = useGLTF('/models/nail.glb')
+  const { scene } = useGLTF('/models/tree.glb')
 
   const clone = useMemo(() => {
     const c = scene.clone(true)
@@ -37,10 +33,10 @@ function Model() {
     const center = box.getCenter(new THREE.Vector3())
     const maxDim = Math.max(size.x, size.y, size.z)
     if (maxDim > 0) {
-      const scale = 1.5 / maxDim
+      const scale = 3.5 / maxDim
       c.scale.setScalar(scale)
       const scaled = new THREE.Box3().setFromObject(c)
-      c.position.set(-center.x * scale, 2.4 - scaled.min.y, -center.z * scale)
+      c.position.set(-center.x * scale, -scaled.min.y, -center.z * scale)
     }
     return c
   }, [scene])
@@ -48,17 +44,23 @@ function Model() {
   return <primitive object={clone} />
 }
 
-export default function NailModel({ mode }: NailModelProps) {
+export default function TreeModel({ mode }: TreeModelProps) {
   return (
     <group>
-      <ambientLight intensity={mode === 'dusk' ? 0.5 : 0.8} />
+      <ambientLight intensity={mode === 'dusk' ? 0.3 : 0.9} />
       <directionalLight
-        position={[10, 10, 5]}
+        position={[10, 12, 6]}
         color={mode === 'dusk' ? '#ffd580' : '#ffffff'}
-        intensity={mode === 'dusk' ? 1.5 : 2.5}
+        intensity={mode === 'dusk' ? 1.5 : 2.2}
         castShadow
       />
-      <directionalLight position={[-5, 5, -3]} color="#c8d4ff" intensity={0.5} />
+      <directionalLight position={[-6, 8, -4]} color={mode === 'dusk' ? '#c8aaff' : '#d4e8ff'} intensity={0.5} />
+      {/* Soft fill from below to simulate ground bounce */}
+      <hemisphereLight
+        color={mode === 'dusk' ? '#2a1f3d' : '#e0f2fe'}
+        groundColor={mode === 'dusk' ? '#0a0a12' : '#c8b97a'}
+        intensity={mode === 'dusk' ? 0.4 : 0.6}
+      />
 
       <GLBErrorBoundary>
         <Suspense fallback={null}>
