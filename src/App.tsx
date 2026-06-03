@@ -5,7 +5,7 @@ import Controls from './components/Controls'
 export default function App() {
   const [mode, setMode] = useState<'day' | 'dusk'>('day')
   const [isDoorOpen, setIsDoorOpen] = useState(false)
-  const [activeDesign, setActiveDesign] = useState<'pavilion' | 'batten' | 'downlight'>('pavilion')
+  const [activeDesign, setActiveDesign] = useState<'pavilion' | 'batten' | 'downlight' | 'nail'>('pavilion')
   
   // Loading screen state
   const [isLoading, setIsLoading] = useState(true)

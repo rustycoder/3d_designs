@@ -18,8 +18,8 @@ interface ControlsProps {
   setMode: (mode: 'day' | 'dusk') => void
   isDoorOpen: boolean
   setIsDoorOpen: (open: boolean) => void
-  activeDesign: 'pavilion' | 'batten' | 'downlight'
-  setActiveDesign: (design: 'pavilion' | 'batten' | 'downlight') => void
+  activeDesign: 'pavilion' | 'batten' | 'downlight' | 'nail'
+  setActiveDesign: (design: 'pavilion' | 'batten' | 'downlight' | 'nail') => void
 }
 
 export default function Controls({
@@ -49,6 +49,11 @@ export default function Controls({
       name: "Recessed downlight",
       desc: "A precision-engineered recessed downlight: 75mm aperture, 88mm body height. Features a deep anti-glare baffle, anodised aluminium heat-sink with 32 radial cooling fins, a die-cast driver housing, and 4 spring-clip mounting brackets for tool-less ceiling installation.",
       tags: ["75mm Aperture", "Anti-Glare Baffle", "Radial Heat Sink"]
+    },
+    nail: {
+      name: "Nail",
+      desc: "A high-fidelity GLB model rendered with physically-based materials and three-point studio lighting. Demonstrates seamless integration of external 3D assets using the useGLTF loader, with auto-centering, PBR material upgrades, and passive auto-rotation.",
+      tags: ["GLB Model", "PBR Materials", "Studio Lighting"]
     }
   }
 
@@ -100,6 +105,13 @@ export default function Controls({
                     onClick={() => setActiveDesign('downlight')}
                   >
                     <h3>Recessed downlight</h3>
+                  </div>
+
+                  <div 
+                    className={`project-item-card compact ${activeDesign === 'nail' ? 'active' : ''}`} 
+                    onClick={() => setActiveDesign('nail')}
+                  >
+                    <h3>Nail</h3>
                   </div>
                 </div>
               </div>

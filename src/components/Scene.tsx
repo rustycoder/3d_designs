@@ -6,6 +6,7 @@ import Pavilion from './Pavilion'
 import Landscape from './Landscape'
 import Lighting from './Lighting'
 import ShowcaseSpaces from './ShowcaseSpaces'
+import NailModel from './NailModel'
 
 interface SceneProps {
   mode: 'day' | 'dusk'
@@ -14,7 +15,7 @@ interface SceneProps {
   cameraPreset: 'default' | 'side' | 'interior' | 'top'
   isDoorOpen: boolean
   setIsDoorOpen: (open: boolean) => void
-  activeDesign: 'pavilion' | 'batten' | 'downlight'
+  activeDesign: 'pavilion' | 'batten' | 'downlight' | 'nail'
 }
 
 // Camera Rig — TRULY ABSOLUTE navigation.
@@ -26,7 +27,7 @@ function CameraRig({
   activeDesign 
 }: { 
   preset: 'default' | 'side' | 'interior' | 'top'
-  activeDesign: 'pavilion' | 'batten' | 'downlight' 
+  activeDesign: 'pavilion' | 'batten' | 'downlight' | 'nail' 
 }) {
   const { camera } = useThree()
   // Starts false — the useEffect on mount immediately sets it to true once
@@ -57,6 +58,10 @@ function CameraRig({
     },
     downlight: {
       pos: new THREE.Vector3(1.2, 1.8, 3.2),
+      look: new THREE.Vector3(0.0, 2.4, 0.0)
+    },
+    nail: {
+      pos: new THREE.Vector3(0.0, 2.8, 4.5),
       look: new THREE.Vector3(0.0, 2.4, 0.0)
     }
   }
@@ -121,7 +126,7 @@ export default function Scene({
   setIsDoorOpen,
   activeDesign
 }: SceneProps) {
-  // Deep navy dusk sky background or light grey day sky
+  // Background color — pavilion has sky, showcase designs use day/dusk studio
   const skyColor = activeDesign === 'pavilion'
     ? (mode === 'dusk' ? '#070a13' : '#e0f2fe')
     : (mode === 'day' ? '#ffffff' : '#030408')
@@ -160,8 +165,10 @@ export default function Scene({
             <Pavilion isDoorOpen={isDoorOpen} onToggleDoor={() => setIsDoorOpen(!isDoorOpen)} />
             <Landscape />
           </>
+        ) : activeDesign === 'nail' ? (
+          <NailModel mode={mode} />
         ) : (
-          <ShowcaseSpaces type={activeDesign} mode={mode} />
+          <ShowcaseSpaces type={activeDesign as 'batten' | 'downlight'} mode={mode} />
         )}
 
         {/* Camera management & controls */}
@@ -171,8 +178,7 @@ export default function Scene({
           makeDefault
           enableDamping
           dampingFactor={0.05}
-          maxPolarAngle={Math.PI / 2 - 0.02} // Stop camera going under floor
-          minDistance={2}
+          minDistance={0.5}
           maxDistance={25}
         />
       </Canvas>
